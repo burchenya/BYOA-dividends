@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Latvian Salary & Dividend Calculator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Latvian Salary & Dividend Calculator 2025</h1>
+        
+        <div class="calculator">
+            <div class="input-section">
+                <label for="totalAmount" class="main-question">💰 How much EUR do you want to receive this month?</label>
+                <input type="number" id="totalAmount" min="0" step="0.01">
+                <button onclick="calculate()">Calculate</button>
+                <small class="update-note">* Minimum salary tax rates last updated: December '24</small>
+            </div>
+
+            <div class="results" id="results">
+                <h2>Results</h2>
+                <div class="results-grid">
+                    <!-- Left Column: Income Structure -->
+                    <div class="column income-column">
+                        <h3>Income Structure</h3>
+                        <div class="section">
+                            <h4>Salary</h4>
+                            <p><span class="label">Base Salary:</span><span class="amount"><span id="baseSalary">0.00</span>&nbsp;€</span></p>
+                        </div>
+                        <div class="section">
+                            <h4>Dividends</h4>
+                            <p><span class="label">Net Dividends:</span><span class="amount highlight-tax"><span id="netDividends">0.00</span>&nbsp;€</span></p>
+                        </div>
+                    </div>
+
+                    <!-- Middle Column: Taxes -->
+                    <div class="column taxes-column">
+                        <h3>Taxes</h3>
+                        <div class="section">
+                            <h4>Salary Taxes</h4>
+                            <p><span class="label">VSAOI & IIEN:</span><span class="amount"><span id="salaryTax">0.00</span>&nbsp;€</span></p>
+                        </div>
+                        <div class="section">
+                            <h4>Dividend Taxes</h4>
+                            <p><span class="label">UIN (Tax):</span><span class="amount highlight-tax"><span id="dividendTax">0.00</span>&nbsp;€</span></p>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Final Results -->
+                    <div class="column totals-column">
+                        <h3>Final Results</h3>
+                        <div class="section highlight">
+                            <p><span class="label">Total Cost:</span><span class="amount"><span id="totalCost">0.00</span>&nbsp;€</span></p>
+                            <p><span class="label">Total Taxes:</span><span class="amount"><span id="totalTaxes">0.00</span>&nbsp;€</span></p>
+                            <p><span class="label">Total Net Amount:</span><span class="amount"><span id="totalNet">0.00</span>&nbsp;€</span></p>
+                            <p><span class="label">Effective Tax Rate:</span><span class="amount"><span id="effectiveTaxRate">0.00</span>&nbsp;%</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="description">
+            <p>This calculator helps Latvian SIA company owners estimate their take-home pay and tax obligations when paying themselves through a combination of salary and dividends. It assumes you're taking the minimum salary requirement and the rest as dividends. Not suitable for regular employees or other types of income. Please note that tax rates and regulations may change - always consult with your accountant for the most current rates.</p>
+        </footer>
+    </div>
+    <script src="calculator.js"></script>
+</body>
+</html> 
