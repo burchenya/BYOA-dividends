@@ -5,65 +5,127 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Latvian Salary & Dividend Calculator</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="container">
-        <h1>Latvian Salary & Dividend Calculator 2025</h1>
-        
-        <div class="calculator">
-            <div class="input-section">
-                <label for="totalAmount" class="main-question">💰 How much EUR do you want to receive this month?</label>
-                <input type="number" id="totalAmount" min="0" step="0.01">
-                <button onclick="calculate()">Calculate</button>
-                <small class="update-note">* Minimum salary tax rates last updated: December '24</small>
-            </div>
+        <div class="calculator-card">
+            <h1>🇱🇻 Latvian Salary & Dividend Calculator 2025</h1>
+            <p class="subtitle">For SIA owners who take a minimum salary and distribute the rest as monthly dividends, this calculator estimates the dividend sum and taxes needed to meet their desired take-home pay.</p>
 
-            <div class="results" id="results">
-                <h2>Results</h2>
-                <div class="results-grid">
-                    <!-- Left Column: Income Structure -->
-                    <div class="column income-column">
-                        <h3>Income Structure</h3>
-                        <div class="section">
-                            <h4>Salary</h4>
-                            <p><span class="label">Base Salary:</span><span class="amount"><span id="baseSalary">0.00</span>&nbsp;€</span></p>
+            <div class="calculator-grid">
+                <div class="main-content">
+                    <div class="inputs-section">
+                        <div class="input-group">
+                            <label for="totalAmount">💰 How much EUR do you want to receive this month?</label>
+                            <div class="input-with-icon">
+                                <span class="currency-symbol">€</span>
+                                <input type="text" 
+                                       id="totalAmount" 
+                                       pattern="[0-9]*[.]?[0-9]+"
+                                       placeholder="0.00"
+                                       inputmode="decimal">
+                            </div>
                         </div>
-                        <div class="section">
-                            <h4>Dividends</h4>
-                            <p><span class="label">Net Dividends:</span><span class="amount highlight-tax"><span id="netDividends">0.00</span>&nbsp;€</span></p>
+
+                        <div class="input-group">
+                            <label for="baseSalaryInput">Your monthly salary</label>
+                            <div class="input-with-icon">
+                                <span class="currency-symbol">€</span>
+                                <input type="text" 
+                                       id="baseSalaryInput" 
+                                       pattern="[0-9]*[.]?[0-9]+"
+                                       placeholder="572.64"
+                                       inputmode="decimal">
+                            </div>
                         </div>
+
+                        <div class="input-group">
+                            <label for="salaryTaxInput">Your salary taxes (VSAOI & IIEN)</label>
+                            <div class="input-with-icon">
+                                <span class="currency-symbol">€</span>
+                                <input type="text" 
+                                       id="salaryTaxInput" 
+                                       pattern="[0-9]*[.]?[0-9]+"
+                                       placeholder="292.49"
+                                       inputmode="decimal">
+                            </div>
+                        </div>
+
+                        <button onclick="calculate()">Calculate</button>
                     </div>
 
-                    <!-- Middle Column: Taxes -->
-                    <div class="column taxes-column">
-                        <h3>Taxes</h3>
-                        <div class="section">
-                            <h4>Salary Taxes</h4>
-                            <p><span class="label">VSAOI & IIEN:</span><span class="amount"><span id="salaryTax">0.00</span>&nbsp;€</span></p>
-                        </div>
-                        <div class="section">
-                            <h4>Dividend Taxes</h4>
-                            <p><span class="label">UIN (Tax):</span><span class="amount highlight-tax"><span id="dividendTax">0.00</span>&nbsp;€</span></p>
+                    <div class="results-section">
+                        <div class="chart-container">
+                            <canvas id="breakdownChart"></canvas>
+                            <div class="chart-center">
+                                <span class="chart-label">Effective Tax Rate</span>
+                                <span class="chart-value" id="effectiveTaxRate">0.00%</span>
+                            </div>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Right Column: Final Results -->
-                    <div class="column totals-column">
-                        <h3>Final Results</h3>
-                        <div class="section highlight">
-                            <p><span class="label">Total Cost:</span><span class="amount"><span id="totalCost">0.00</span>&nbsp;€</span></p>
-                            <p><span class="label">Total Taxes:</span><span class="amount"><span id="totalTaxes">0.00</span>&nbsp;€</span></p>
-                            <p><span class="label">Total Net Amount:</span><span class="amount"><span id="totalNet">0.00</span>&nbsp;€</span></p>
-                            <p><span class="label">Effective Tax Rate:</span><span class="amount"><span id="effectiveTaxRate">0.00</span>&nbsp;%</span></p>
+                <div class="breakdown-section">
+                    <div class="breakdown-header">
+                        Here's the breakdown for a <span id="desiredAmount">0.00</span> € take-home pay
+                    </div>
+                    <div class="breakdown-grid">
+                        <div class="breakdown-column">
+                            <h3>Income Structure</h3>
+                            <div class="group-label">SALARY</div>
+                            <div class="breakdown-item">
+                                <span class="dot salary-dot"></span>
+                                Base Salary
+                                <span class="item-value" id="baseSalaryDisplay">0.00 €</span>
+                            </div>
+                            
+                            <div class="group-label">DIVIDENDS</div>
+                            <div class="breakdown-item">
+                                <span class="dot dividend-dot"></span>
+                                Net Dividends
+                                <span class="item-value" id="netDividendsDisplay">0.00 €</span>
+                            </div>
+                        </div>
+
+                        <div class="breakdown-column">
+                            <h3>Taxes</h3>
+                            <div class="group-label">SALARY TAXES</div>
+                            <div class="breakdown-item">
+                                <span class="dot salary-tax-dot"></span>
+                                VSAOI & IIEN
+                                <span class="item-value" id="salaryTaxDisplay">0.00 €</span>
+                            </div>
+                            
+                            <div class="group-label">DIVIDEND TAXES</div>
+                            <div class="breakdown-item">
+                                <span class="dot dividend-tax-dot"></span>
+                                UIN (Tax)
+                                <span class="item-value" id="dividendTaxDisplay">0.00 €</span>
+                            </div>
+                        </div>
+
+                        <div class="breakdown-column">
+                            <h3>Final Results</h3>
+                            <div class="totals-box">
+                                <div class="total-row">
+                                    <span class="total-label">Total Cost:</span>
+                                    <span class="total-value" id="totalCost">0.00 €</span>
+                                </div>
+                                <div class="total-row">
+                                    <span class="total-label">Total Taxes:</span>
+                                    <span class="total-value" id="totalTaxes">0.00 €</span>
+                                </div>
+                                <div class="total-row">
+                                    <span class="total-label">Total Net Amount:</span>
+                                    <span class="total-value" id="totalNet">0.00 €</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
-        <footer class="description">
-            <p>This calculator helps Latvian SIA company owners estimate their take-home pay and tax obligations when paying themselves through a combination of salary and dividends. It assumes you're taking the minimum salary requirement and the rest as dividends. Not suitable for regular employees or other types of income. Please note that tax rates and regulations may change - always consult with your accountant for the most current rates.</p>
-        </footer>
     </div>
     <script src="calculator.js"></script>
 </body>
