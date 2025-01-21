@@ -38,6 +38,10 @@ function initChart() {
     dtCtx.lineTo(6, 6);
     dtCtx.stroke();
 
+    if (breakdownChart) {
+        breakdownChart.destroy();
+    }
+
     breakdownChart = new Chart(ctx, {
         type: 'doughnut',
         data: {
@@ -56,6 +60,7 @@ function initChart() {
         },
         options: {
             responsive: true,
+            maintainAspectRatio: true,
             plugins: {
                 legend: {
                     display: false
@@ -139,7 +144,7 @@ function calculate() {
         document.getElementById('effectiveTaxRate').textContent = formatNumber(effectiveTaxRate) + '%';
         document.getElementById('desiredAmount').textContent = formatNumber(totalDesiredAmount);
 
-        // Update the chart
+        // Update the chart with actual values
         updateChart(baseSalary, netDividends, salaryTax, dividendTax);
 
         // Show results
